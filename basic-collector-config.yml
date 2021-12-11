@@ -8,32 +8,8 @@ exporters:
   logging:
     logLevel: debug
 
-#   Multiple exporters example
-  otlp/ls:
-    endpoint: "ingest.lightstep.com:443"
-    headers: 
-      "lightstep-access-token": "<YOUR_API_TOKEN>"
-      
-  
-  datadog/metrics:
-    api:
-      key: "<YOUR_API_TOKEN>"
-    env: 
-      otel-demo
-
 service:
   pipelines:
     traces/1: 
       receivers: [otlp]
       exporters: [logging]
-
-  # Multiple backend example in the pipelines
-    traces/2:
-      receivers: [otlp]
-      processors: []
-      exporters: [otlp/ls, datadog/metrics]
-  
-    metrics/1:
-      receivers: [otlp]
-      processors: []
-      exporters: [datadog/metrics]
