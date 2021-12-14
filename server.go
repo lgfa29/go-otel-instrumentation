@@ -9,7 +9,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -29,10 +29,11 @@ func main() {
 		fmt.Printf("Error adding %v to the tracer engine: %v", "applicationName", err)
 	}
 
-	collectorAddr := "127.0.0.1:1111"
-	traceExporter, err := otlptracegrpc.New(ctx,
-		otlptracegrpc.WithInsecure(),
-		otlptracegrpc.WithEndpoint(collectorAddr),
+	// collectorAddr := "127.0.0.1:1111"
+	collectorAddr := "otel-collector-http.localhost"
+	traceExporter, err := otlptracehttp.New(ctx,
+		otlptracehttp.WithInsecure(),
+		otlptracehttp.WithEndpoint(collectorAddr),
 	)
 	// Checking for errors
 	if err != nil {
@@ -51,7 +52,7 @@ func main() {
 
 	wrappedHandler := otelhttp.NewHandler(http.HandlerFunc(signUp), "/")
 	http.Handle("/", wrappedHandler)
-	fmt.Println("User registration server is running")
+	fmt.Println("User registration server is running. OTel Collector on ", collectorAddr)
 	http.ListenAndServe(":9000", nil)
 }
 
