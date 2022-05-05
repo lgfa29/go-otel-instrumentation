@@ -52,7 +52,7 @@ func main() {
 
 	wrappedHandler := otelhttp.NewHandler(http.HandlerFunc(signUp), "/")
 	http.Handle("/", wrappedHandler)
-	fmt.Println("User registration server is running. OTel Collector on ", collectorAddr)
+	fmt.Println("User registration server is running. Connecting to the OTel Collector on", collectorAddr)
 	http.ListenAndServe(":9000", nil)
 }
 
@@ -66,11 +66,11 @@ func signUp(w http.ResponseWriter, req *http.Request) {
 	defer span.End()
 
 	// before tracing
-	name := "john"
-	fmt.Print("name:", name)
+	name := "Kathryn Janeway"
+	fmt.Println("name:", name)
 
 	// after tracing
-	name = "john"
+	name = "Kathryn Janeway"
 	fmt.Println("name:", name)
 	span.SetAttributes(attribute.String("name", name))
 
